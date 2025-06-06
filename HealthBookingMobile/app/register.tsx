@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 
-const API_URL = 'http://192.168.1.100:3000/api/auth/register';
+const API_URL = 'http://localhost:3000/api/auth/register';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -24,18 +24,19 @@ export default function RegisterScreen() {
     try {
       const response = await axios.post(API_URL, { username, password });
       Alert.alert('Thành công', 'Đăng ký thành công! Vui lòng đăng nhập.');
-      router.replace("/index");
+      router.replace("/");
     } catch (error: any) {
-      Alert.alert('Lỗi', 'Đăng ký thất bại: ' + (error.response?.data?.message || error.message));
+      Alert.alert('Lỗi', 'Đăng ký thất bại: ' + (error.response?.data?.error || error.message));
     }
   };
 
   const navigateToLogin = () => {
-    router.replace("/index");
+    router.replace("/");
   };
 
   return (
     <View style={styles.container}>
+      <Text style={styles.hospitalName}>🏥 Bệnh viện HUST</Text>
       <Text style={styles.title}>Đăng Ký</Text>
       <TextInput
         style={styles.input}
@@ -59,13 +60,42 @@ export default function RegisterScreen() {
         secureTextEntry
       />
       <Button title="Đăng Ký" onPress={handleRegister} />
-      <Button title="Quay lại Đăng Nhập" onPress={navigateToLogin} color="gray" />
+      <View style={styles.buttonContainer}>
+        <Button title="Quay lại Đăng Nhập" onPress={navigateToLogin} color="gray" />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, justifyContent: 'center' },
-  title: { fontSize: 24, fontWeight: 'bold', textAlign: 'center', marginBottom: 16 },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 8, marginBottom: 16, borderRadius: 4 },
+  container: { 
+    flex: 1, 
+    padding: 16, 
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5'
+  },
+  hospitalName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#2196F3'
+  },
+  title: { 
+    fontSize: 20, 
+    fontWeight: 'bold', 
+    textAlign: 'center', 
+    marginBottom: 20 
+  },
+  input: { 
+    borderWidth: 1, 
+    borderColor: '#ccc', 
+    padding: 12, 
+    marginBottom: 16, 
+    borderRadius: 8,
+    backgroundColor: 'white'
+  },
+  buttonContainer: {
+    marginTop: 10
+  }
 });

@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 
-const API_URL = 'http://192.168.1.100:3000/api/auth/login'; // Thay IP máy tính
+const API_URL = 'http://localhost:3000/api/auth/login';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -21,27 +21,70 @@ export default function LoginScreen() {
       Alert.alert('Thành công', 'Đăng nhập thành công!');
       router.replace('/(tabs)/explore');
     } catch (error: any) {
-      Alert.alert('Lỗi', 'Đăng nhập thất bại: ' + error.message);
+      const errorMessage = error.response?.data?.error || error.message;
+      Alert.alert('Lỗi', 'Đăng nhập thất bại: ' + errorMessage);
     }
   };
 
   const navigateToRegister = () => {
-    router.push('/(tabs)/register');
+    router.push('/register');
   };
 
   return (
     <View style={styles.container}>
-      <Text>Bệnh viện Hust</Text>
-      <Text>Đăng Nhập</Text>
-      <TextInput style={styles.input} value={username} onChangeText={setUsername} placeholder="Tên đăng nhập" />
-      <TextInput style={styles.input} value={password} onChangeText={setPassword} placeholder="Mật khẩu" secureTextEntry />
+      <Text style={styles.hospitalName}>🏥 Bệnh viện HUST</Text>
+      <Text style={styles.title}>Đăng Nhập</Text>
+      <TextInput 
+        style={styles.input} 
+        value={username} 
+        onChangeText={setUsername} 
+        placeholder="Tên đăng nhập"
+        autoCapitalize="none"
+      />
+      <TextInput 
+        style={styles.input} 
+        value={password} 
+        onChangeText={setPassword} 
+        placeholder="Mật khẩu" 
+        secureTextEntry 
+      />
       <Button title="Đăng Nhập" onPress={handleLogin} />
-      <Button title="Đăng Ký" onPress={navigateToRegister} color="green" />
+      <View style={styles.registerContainer}>
+        <Button title="Đăng Ký" onPress={navigateToRegister} color="green" />
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, justifyContent: 'center' },
-  input: { borderWidth: 1, borderColor: '#ccc', padding: 8, marginBottom: 16 },
+  container: { 
+    flex: 1, 
+    padding: 16, 
+    justifyContent: 'center',
+    backgroundColor: '#f5f5f5'
+  },
+  hospitalName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: '#2196F3'
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20
+  },
+  input: { 
+    borderWidth: 1, 
+    borderColor: '#ccc', 
+    padding: 12, 
+    marginBottom: 16,
+    borderRadius: 8,
+    backgroundColor: 'white'
+  },
+  registerContainer: {
+    marginTop: 10
+  }
 });
